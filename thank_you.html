@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cảm ơn bạn!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .gift-container {
+            position: relative;
+            cursor: pointer;
+            animation: bounceIn 1s ease-out;
+        }
+
+        .gift-box {
+            width: 250px;
+            height: 250px;
+            position: relative;
+            transition: all 0.3s ease;
+            animation: float 3s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        .gift-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+            transition: all 0.3s ease;
+        }
+
+        .gift-box:hover {
+            transform: scale(1.05);
+        }
+
+        .gift-box:hover img {
+            filter: drop-shadow(0 15px 40px rgba(0, 0, 0, 0.4));
+        }
+
+        .gift-lid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: all 0.5s ease;
+            z-index: 2;
+        }
+
+        .gift-lid img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .gift-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            animation: slideInUp 1s ease-out;
+            display: none;
+        }
+
+        .container.show {
+            display: block;
+            animation: explodeIn 1s ease-out;
+        }
+
+        .heart {
+            font-size: 80px;
+            color: #ff6b6b;
+            animation: heartbeat 1.5s ease-in-out infinite;
+            margin-bottom: 30px;
+            display: inline-block;
+        }
+
+        h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease-out 0.5s both;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease-out 1s both;
+        }
+
+        .message {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto 40px;
+            animation: fadeInUp 1s ease-out 1.5s both;
+        }
+
+        .floating-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: #ff6b6b;
+            font-size: 20px;
+            animation: floatUp 3s linear infinite;
+            opacity: 0.7;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: sparkle 2s linear infinite;
+        }
+
+        .button {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease-out 2s both;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .button:active {
+            transform: translateY(-1px);
+        }
+
+        /* Animations */
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) translateY(-50px);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05) translateY(0);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+
+        @keyframes explodeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(180deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2) rotate(0deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes giftOpen {
+            0% {
+                transform: translateY(0) rotateX(0deg) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-20px) rotateX(45deg) scale(1.1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100px) rotateX(90deg) scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        @keyframes confetti {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-200px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes rainbow {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+                margin: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .heart {
+                font-size: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-hearts" id="floatingHearts"></div>
+    
+    <!-- Gift Box Initial State -->
+    <div class="gift-container" id="giftContainer" onclick="openGift()">
+        <div class="gift-box">
+            <img src="Lovepik_com-611437503-Hand drawn cartoon gift box illustration.png" alt="Hộp quà" id="giftBoxImage">
+            <div class="gift-lid" id="giftLid">
+                <img src="Lovepik_com-611437503-Hand drawn cartoon gift box illustration.png" alt="Nắp hộp quà" id="giftLidImage">
+            </div>
+            <div class="gift-text">Click để mở quà!</div>
+        </div>
+    </div>
+    
+    <!-- Thank You Content (Hidden Initially) -->
+    <div class="container" id="thankYouContainer">
+        <div class="heart">❤️</div>
+        <h1>Cảm ơn bạn!</h1>
+        <p class="subtitle">Thank you so much!</p>
+        <p class="message">
+            Thật sự cảm ơn cậu rất nhiều vì món quà sinh nhật vừa ý nghĩa vừa tuyệt vời này! Mình thật sự may mắn khi có một người bạn như cậu – luôn quan tâm, chu đáo và biết cách làm mình bất ngờ. Mỗi lần nhìn món quà này, mình không chỉ thấy niềm vui mà còn thấy tình bạn đẹp và những kỷ niệm tuyệt vời mà chúng ta đã có cùng nhau. Cậu luôn khiến những ngày bình thường trở nên đặc biệt, và sinh nhật này cũng vậy. Cảm ơn cậu vì đã dành thời gian, tâm huyết và cả tấm lòng của mình cho mình. Mình sẽ trân trọng món quà này mãi và luôn nhớ về cậu với thật nhiều yêu thương ❤️
+        </p>
+    </div>
+
+    <script>
+        let giftOpened = false;
+
+        // Mở hộp quà
+        function openGift() {
+            if (giftOpened) return;
+            
+            giftOpened = true;
+            const giftContainer = document.getElementById('giftContainer');
+            const giftLid = document.getElementById('giftLid');
+            const thankYouContainer = document.getElementById('thankYouContainer');
+            
+            // Hiệu ứng mở nắp hộp
+            giftLid.style.animation = 'giftOpen 1s ease-out forwards';
+            
+            // Tạo hiệu ứng confetti
+            createConfetti();
+            
+            // Hiển thị nội dung cảm ơn sau 1 giây
+            setTimeout(() => {
+                giftContainer.style.display = 'none';
+                thankYouContainer.classList.add('show');
+                
+                // Tạo hiệu ứng trái tim bay
+                for (let i = 0; i < 15; i++) {
+                    setTimeout(() => {
+                        createFloatingHeart();
+                    }, i * 100);
+                }
+                
+                // Bắt đầu hiệu ứng liên tục
+                startContinuousEffects();
+            }, 1000);
+        }
+
+        // Tạo hiệu ứng confetti
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff'];
+            const shapes = ['🎉', '🎊', '✨', '💫', '⭐', '🌟', '💖', '💕', '💝'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.top = '50vh';
+                    confetti.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                    confetti.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.pointerEvents = 'none';
+                    confetti.style.zIndex = '1000';
+                    confetti.innerHTML = shapes[Math.floor(Math.random() * shapes.length)];
+                    confetti.style.animation = 'confetti 3s ease-out forwards';
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        if (confetti.parentNode) {
+                            confetti.parentNode.removeChild(confetti);
+                        }
+                    }, 3500);
+                }, i * 50);
+            }
+        }
+
+        // Tạo hiệu ứng trái tim bay
+        function createFloatingHeart() {
+            const heartsContainer = document.getElementById('floatingHearts');
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            const heartEmojis = ['💖', '💕', '💗', '💓', '💝', '💘', '💞', '💟'];
+            heart.innerHTML = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDelay = Math.random() * 2 + 's';
+            heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            heart.style.fontSize = (Math.random() * 10 + 15) + 'px';
+            heartsContainer.appendChild(heart);
+
+            // Xóa trái tim sau khi animation kết thúc
+            setTimeout(() => {
+                if (heart.parentNode) {
+                    heart.parentNode.removeChild(heart);
+                }
+            }, 5000);
+        }
+
+        // Tạo hiệu ứng lấp lánh
+        function createSparkle() {
+            const container = document.querySelector('.container');
+            if (!container) return;
+            
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+            sparkle.style.animationDelay = Math.random() * 2 + 's';
+            sparkle.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+            container.appendChild(sparkle);
+
+            setTimeout(() => {
+                if (sparkle.parentNode) {
+                    sparkle.parentNode.removeChild(sparkle);
+                }
+            }, 2000);
+        }
+
+        // Tạo hiệu ứng cầu vồng
+        function createRainbowEffect() {
+            const elements = document.querySelectorAll('.heart, .button');
+            elements.forEach(element => {
+                element.style.animation = 'rainbow 2s linear infinite';
+            });
+        }
+
+        // Bắt đầu hiệu ứng liên tục
+        function startContinuousEffects() {
+            setInterval(createFloatingHeart, 2000);
+            setInterval(createSparkle, 1500);
+            setInterval(createRainbowEffect, 5000);
+        }
+
+        // Hiệu ứng khi click button
+        function showMoreThanks() {
+            const button = document.querySelector('.button');
+            button.innerHTML = 'Cảm ơn bạn rất nhiều! 💕';
+            button.style.background = 'linear-gradient(45deg, #ff8e8e, #ff6b6b)';
+            button.style.animation = 'rainbow 1s linear infinite';
+            
+            // Tạo nhiều trái tim bay
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    createFloatingHeart();
+                }, i * 50);
+            }
+
+            // Tạo hiệu ứng confetti
+            createConfetti();
+
+            // Reset button sau 3 giây
+            setTimeout(() => {
+                button.innerHTML = 'Gửi thêm lời cảm ơn';
+                button.style.background = 'linear-gradient(45deg, #ff6b6b, #ff8e8e)';
+                button.style.animation = '';
+            }, 3000);
+        }
+
+        // Hiệu ứng click toàn trang
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName !== 'BUTTON' && e.target.id !== 'giftContainer') {
+                createSparkle();
+            }
+        });
+
+        // Hiệu ứng hover cho hộp quà
+        document.getElementById('giftContainer').addEventListener('mouseenter', () => {
+            if (!giftOpened) {
+                const giftBox = document.querySelector('.gift-box');
+                giftBox.style.transform = 'scale(1.1) rotate(5deg)';
+                const giftImage = document.getElementById('giftBoxImage');
+                if (giftImage) {
+                    giftImage.style.filter = 'drop-shadow(0 20px 50px rgba(0, 0, 0, 0.4)) brightness(1.1)';
+                }
+            }
+        });
+
+        document.getElementById('giftContainer').addEventListener('mouseleave', () => {
+            if (!giftOpened) {
+                const giftBox = document.querySelector('.gift-box');
+                giftBox.style.transform = 'scale(1) rotate(0deg)';
+                const giftImage = document.getElementById('giftBoxImage');
+                if (giftImage) {
+                    giftImage.style.filter = 'drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3)) brightness(1)';
+                }
+            }
+        });
+
+        // Thêm hiệu ứng loading cho hình ảnh
+        window.addEventListener('load', () => {
+            const giftImage = document.getElementById('giftBoxImage');
+            const giftLidImage = document.getElementById('giftLidImage');
+            
+            if (giftImage) {
+                giftImage.style.opacity = '0';
+                giftImage.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    giftImage.style.opacity = '1';
+                }, 100);
+            }
+            
+            if (giftLidImage) {
+                giftLidImage.style.opacity = '0';
+                giftLidImage.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    giftLidImage.style.opacity = '1';
+                }, 200);
+            }
+        });
+    </script>
+</body>
+</html>
